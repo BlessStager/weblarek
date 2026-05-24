@@ -1,21 +1,18 @@
 import { IBuyer, TPayment } from '../../types';
-import { IEvents } from '../base/Events';
 
 export class BuyerModel {
-    payment: TPayment | '' = '';
-    email: string = '';
-    phone: string = '';
-    address: string = '';
-    formErrors: Partial<Record<keyof IBuyer, string>> = {};
-    protected events: IEvents;
+    protected payment: TPayment | null = null;
+    protected email: string = '';
+    protected phone: string = '';
+    protected address: string = '';
 
-    constructor(events: IEvents) {
-        this.events = events;
+    constructor() {
+        
     }
 
     setField(field: keyof IBuyer, value: string): void {
         if (field === 'payment') {
-            this.payment = value as TPayment;
+            this.payment = (value === 'card' || value === 'cash') ? value : null;
         } else if (field === 'email') {
             this.email = value;
         } else if (field === 'phone') {
@@ -23,13 +20,11 @@ export class BuyerModel {
         } else if (field === 'address') {
             this.address = value;
         }
-        
-        this.validate();
     }
 
     getData(): IBuyer {
         return {
-            payment: this.payment as TPayment,
+            payment: this.payment,
             email: this.email,
             phone: this.phone,
             address: this.address
@@ -37,15 +32,14 @@ export class BuyerModel {
     }
 
     clear(): void {
-        this.payment = '';
+        this.payment = null;
         this.email = '';
         this.phone = '';
         this.address = '';
-        this.formErrors = {};
     }
 
-    validate(): boolean {
-        const errors: typeof this.formErrors = {};
+    validate(): { [key: string]: string } {
+        const errors: { [key: string]: string } = {};
 
         if (!this.payment) {
             errors.payment = 'Необходимо выбрать способ оплаты';
@@ -60,9 +54,6 @@ export class BuyerModel {
             errors.phone = 'Необходимо указать телефон';
         }
 
-        this.formErrors = errors;
-        this.events.emit('formErrors:change', this.formErrors);
-
-        return Object.keys(errors).length === 0;
+        return errors;
     }
 }

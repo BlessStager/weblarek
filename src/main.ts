@@ -1,5 +1,4 @@
 import './scss/styles.scss';
-import { EventEmitter } from './components/base/Events';
 import { CatalogModel } from './components/models/CatalogModel';
 import { CartModel } from './components/models/CartModel';
 import { BuyerModel } from './components/models/BuyerModel';
@@ -8,11 +7,9 @@ import { Api } from './components/base/Api';
 import { LarekApi } from './components/LarekApi';
 import { API_URL, settings } from './utils/constants';
 
-const events = new EventEmitter();
-
-const catalog = new CatalogModel(events);
-const cart = new CartModel(events);
-const buyer = new BuyerModel(events);
+const catalog = new CatalogModel();
+const cart = new CartModel();
+const buyer = new BuyerModel();
 
 console.log('--- ТЕСТИРОВАНИЕ КАТАЛОГА ---');
 catalog.setItems(apiProducts.items);
@@ -51,7 +48,6 @@ buyer.setField('payment', 'cash');
 buyer.setField('email', 'test@example.com');
 console.log('Данные частично заполненной формы:', buyer.getData());
 console.log('Валидация частично заполненной формы:', buyer.validate());
-console.log('Ошибки частично заполненной формы:', buyer.formErrors);
 
 buyer.clear();
 console.log('Данные после очистки:', buyer.getData());
@@ -63,7 +59,6 @@ buyer.setField('address', 'г. Москва, ул. Ленина, д. 2');
 
 console.log('Данные после заполнения:', buyer.getData());
 console.log('Валидация заполненной формы:', buyer.validate());
-console.log('Ошибки в заполненной форме:', buyer.formErrors);
 
 const baseApi = new Api(API_URL, settings);
 
@@ -72,9 +67,9 @@ const api = new LarekApi(API_URL, baseApi);
 console.log('--- ЗАГРУЗКА ДАННЫХ С СЕРВЕРА ---');
 
 api.getProductList()
-    .then((products) => {
+    .then((res) => {
         console.log('Данные успешно получены с сервера!');
-        catalog.setItems(products);
+        catalog.setItems(res.items);
         console.log('Товары в модели каталога:', catalog.getItems());
     })
     .catch((err) => {

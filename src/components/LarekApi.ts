@@ -1,28 +1,21 @@
-import { Api } from './base/Api';
-import { IOrder, IOrderResult, IProduct, IProductListResponse } from '../types';
+import { IApi } from '../types';
+import { IOrder, IOrderResult, IProductListResponse } from '../types';
 
 
 export class LarekApi {
-    private _baseApi: Api;
+    private baseApi: IApi;
     readonly cdn: string;
 
-    constructor(cdn: string, baseApi: Api) {
-        this._baseApi = baseApi;
+    constructor(cdn: string, baseApi: IApi) {
+        this.baseApi = baseApi;
         this.cdn = cdn;
     }
 
-    getProductList(): Promise<IProduct[]> {
-        return this._baseApi.get('/product/').then((data: object) => {
-            const response = data as IProductListResponse;
-            
-            return response.items.map((item) => ({
-                ...item,
-                image: this.cdn + item.image
-            }));
-        });
+    getProductList(): Promise<IProductListResponse> {
+        return this.baseApi.get<IProductListResponse>('/product/').then((data) => data);
     }
 
     orderProducts(order: IOrder): Promise<IOrderResult> {
-        return this._baseApi.post('/order/', order).then((data: object) => data as IOrderResult);
+        return this.baseApi.post<IOrderResult>('/order/', order).then((data) => data);
     }
 }
