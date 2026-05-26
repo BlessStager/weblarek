@@ -1,4 +1,4 @@
-import { IBuyer, TPayment } from '../../types';
+import { IBuyer, TPayment, BuyerErrors  } from '../../types';
 
 export class BuyerModel {
     protected payment: TPayment | null = null;
@@ -38,8 +38,8 @@ export class BuyerModel {
         this.address = '';
     }
 
-    validate(): { [key: string]: string } {
-        const errors: { [key: string]: string } = {};
+    validate(): BuyerErrors {
+        const errors: BuyerErrors = {};
 
         if (!this.payment) {
             errors.payment = 'Необходимо выбрать способ оплаты';

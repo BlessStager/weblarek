@@ -62,7 +62,7 @@ console.log('Валидация заполненной формы:', buyer.valid
 
 const baseApi = new Api(API_URL, settings);
 
-const api = new LarekApi(API_URL, baseApi);
+const api = new LarekApi(baseApi);
 
 console.log('--- ЗАГРУЗКА ДАННЫХ С СЕРВЕРА ---');
 
