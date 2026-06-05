@@ -103,6 +103,8 @@ events.on('preview:action', () => {
     } else {
         cart.addProduct(product);
     }
+    
+    modal.close(); 
 });
 
 
