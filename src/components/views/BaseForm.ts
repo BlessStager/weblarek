@@ -7,7 +7,7 @@ export interface IBaseForm {
     errors: string;
 }
 
-export class BaseForm<T> extends Component<IBaseForm> {
+export class BaseForm<T> extends Component<Partial<T> & IBaseForm> {
     protected submitButton: HTMLButtonElement;
     protected errorsElement: HTMLElement;
     protected container: HTMLFormElement;
@@ -41,12 +41,5 @@ export class BaseForm<T> extends Component<IBaseForm> {
 
     set errors(value: string) {
         this.errorsElement.textContent = value;
-    }
-
-    render(state: Partial<T> & IBaseForm) {
-        const { validate, errors, ...inputs } = state;
-        super.render({ validate, errors });
-        Object.assign(this, inputs);
-        return this.container;
     }
 }

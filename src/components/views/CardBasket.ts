@@ -1,5 +1,4 @@
-import { CardBase, ICardData } from './CardBase';
-import { IEvents } from '../base/Events';
+import { CardBase, ICardData, ICardActions } from './CardBase';
 import { ensureElement } from '../../utils/utils';
 
 export interface ICardBasketData extends ICardData {
@@ -10,15 +9,15 @@ export class CardBasket extends CardBase<ICardBasketData> {
     protected indexElement: HTMLElement;
     protected deleteButton: HTMLButtonElement;
 
-    constructor(container: HTMLElement, events: IEvents) {
-        super(container, events);
+    constructor(container: HTMLElement, actions?: ICardActions) {
+        super(container);
 
         this.indexElement = ensureElement<HTMLElement>('.basket__item-index', this.container);
         this.deleteButton = ensureElement<HTMLButtonElement>('.basket__item-delete', this.container);
 
-        this.deleteButton.addEventListener('click', () => {
-            this.events.emit('card:remove', { id: this.productId });
-        });
+        if (actions?.onClick) {
+            this.deleteButton.addEventListener('click', actions.onClick);
+        }
     }
 
     set index(value: number) {

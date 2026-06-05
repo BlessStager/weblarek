@@ -10,17 +10,15 @@ export class BuyerModel {
     constructor(protected events: IEvents) {
         
     }
-
+    
     setField(field: keyof IBuyer, value: string): void {
         if (field === 'payment') {
             this.payment = (value === 'card' || value === 'cash') ? value : null;
-        } else if (field === 'email') {
-            this.email = value;
-        } else if (field === 'phone') {
-            this.phone = value;
-        } else if (field === 'address') {
-            this.address = value;
+        } else {
+            this[field] = value;
         }
+        
+        this.events.emit('formErrors:change', this.validate());
     }
 
     getData(): IBuyer {
@@ -37,6 +35,7 @@ export class BuyerModel {
         this.email = '';
         this.phone = '';
         this.address = '';
+        this.events.emit('formErrors:change', this.validate()); 
     }
 
     validate(): BuyerErrors {
@@ -48,14 +47,6 @@ export class BuyerModel {
         if (!this.address) {
             errors.address = 'Необходимо указать адрес доставки';
         }
-        if (!this.email) {
-            errors.email = 'Необходимо указать email';
-        }
-        if (!this.phone) {
-            errors.phone = 'Необходимо указать телефон';
-        }
-
-        this.events.emit('order:validation', errors);
 
         return errors;
     }

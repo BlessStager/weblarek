@@ -1,5 +1,4 @@
-import { CardBase, ICardData } from './CardBase';
-import { IEvents } from '../base/Events';
+import { CardBase, ICardData, ICardActions } from './CardBase';
 import { ensureElement } from '../../utils/utils';
 import { categoryMap } from '../../utils/constants';
 
@@ -16,23 +15,18 @@ export class CardPreview extends CardBase<ICardPreviewData> {
     protected categoryElement: HTMLElement;
     protected descriptionElement: HTMLElement;
     protected actionButton: HTMLButtonElement;
-    protected inCartFlag: boolean = false;
 
-    constructor(container: HTMLElement, events: IEvents) {
-        super(container, events);
+    constructor(container: HTMLElement, actions?: ICardActions) {
+        super(container);
         
         this.imageElement = ensureElement<HTMLImageElement>('.card__image', this.container);
         this.categoryElement = ensureElement<HTMLElement>('.card__category', this.container);
         this.descriptionElement = ensureElement<HTMLElement>('.card__text', this.container);
         this.actionButton = ensureElement<HTMLButtonElement>('.card__button', this.container);
 
-        this.actionButton.addEventListener('click', () => {
-            if (this.inCartFlag) {
-                this.events.emit('card:remove', { id: this.productId });
-            } else {
-                this.events.emit('card:buy', { id: this.productId });
-            }
-        });
+        if (actions?.onClick) {
+            this.actionButton.addEventListener('click', actions.onClick);
+        }
     }
 
     set image(src: string) {
@@ -55,18 +49,15 @@ export class CardPreview extends CardBase<ICardPreviewData> {
         this.descriptionElement.textContent = value;
     }
 
-    set price(value: number | null) {
-        super.price = value;
-        if (value === null) {
-            this.actionButton.disabled = true;
-            this.actionButton.textContent = 'Недоступно';
+    set buttonTitle(value: string) {
+        if (this.actionButton) {
+            this.actionButton.textContent = value;
         }
     }
 
-    set inCart(value: boolean) {
-        this.inCartFlag = value;
-        if (!this.actionButton.disabled) {
-            this.actionButton.textContent = value ? 'Удалить из корзины' : 'Купить';
+    set buttonIsDisabled(value: boolean) {
+        if (this.actionButton) {
+            this.actionButton.disabled = value;
         }
     }
 }

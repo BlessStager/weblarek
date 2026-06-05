@@ -307,23 +307,21 @@ Presenter - презентер содержит основную логику п
 Базовый класс для всех вариаций карточек товара.
 
 Конструктор класса:  
-`constructor(container: HTMLElement, events: EventEmitter)` - принимает DOM-элемент и экземпляр брокера событий.
+`constructor(container: HTMLElement, actions?: ICardActions)` - принимает DOM-элемент и объект с коллбэками для обработки кликов.
 
 Поля класса:   
 `protected titleElement: HTMLElement` - элемент заголовка карточки.  
 `protected priceElement: HTMLElement` - элемент цены карточки.
-`protected productId: string` - идентификатор товара, используемый при генерации событий.  
 
 Методы и сеттеры класса:  
 `set title(value: string)` - обновляет содержимое заголовка карточки.  
 `set price(value: number | null)` - обновляет значение цены карточки.
-`set id(value: string): void` - сохраняет идентификатор товара.
 
 #### Класс CardCatalog
 Представляет карточку товара при отображении в каталоге. Наследуется от класса `CardBase`.
 
 Конструктор класса:  
-`constructor(container: HTMLElement, events: EventEmitter)` - принимает DOM-элемент и экземпляр брокера событий.
+`constructor(container: HTMLElement, actions?: ICardActions)` - принимает DOM-элемент и объект с коллбэками для обработки кликов.
 
 Поля класса:  
 `protected categoryElement: HTMLElement` - элемент категории.
@@ -338,27 +336,27 @@ Presenter - презентер содержит основную логику п
 Представляет детализированную карточку товара для отображения в модальном окне. Наследуется от класса `CardBase`.
 
 Конструктор класса:  
-`constructor(container: HTMLElement, events: EventEmitter)` - принимает DOM-элемент и экземпляр брокера событий.
+`constructor(container: HTMLElement, actions?: ICardActions)` - принимает DOM-элемент и объект с коллбэками для обработки кликов.
 
 Поля класса:  
 `protected imageElement: HTMLImageElement` - элемент изображения товара.
 `protected categoryElement: HTMLElement` - элемент категории.
 `protected descriptionElement: HTMLElement` - элемент описания товара.
 `protected actionButton: HTMLButtonElement` - кнопка действия.
-`protected inCartFlag: boolean` - флаг, указывающий, находится ли товар в корзине.
 
 Методы и сеттеры класса:  
 `set image(src: string): void` - устанавливает путь к изображению товара.
 `set imageAlt(value: string): void` - устанавливает альтернативный текст изображения.
 `set category(value: string): void` - устанавливает текст категории и модифицирует класс при необходимости.
 `set description(value: string): void` - устанавливает текст описания товара.
-`set inCart(value: boolean): void` - сохраняет флаг нахождения товара в корзине.
+`set buttonTitle(value: string): void` - устанавливает текст на кнопке действия.
+`set buttonIsDisabled(value: boolean): void` - переключает доступность (активность) кнопки действия.
 
 #### Класс CardBasket
 Представляет компактную карточку товара для отображения в списке корзины. Наследуется от класса `CardBase`.
 
 Конструктор класса:  
-`constructor(container: HTMLElement, events: EventEmitter)` - принимает DOM-элемент и экземпляр брокера событий.
+`constructor(container: HTMLElement, actions?: ICardActions)` - принимает DOM-элемент и объект с коллбэками для обработки кликов.
 
 Поля класса:  
 `protected indexElement: HTMLElement` - элемент с порядковым номером.  
@@ -386,7 +384,7 @@ Presenter - презентер содержит основную логику п
 
 #### Описание событий слоя представлений
 `card:select` - выбор карточки для просмотра.
-`card:buy` - нажатие кнопки покупки товара.
+`preview:action` - нажатие кнопки покупки товара.
 `card:remove` - нажатие кнопки удаления товара из корзины.
 `basket:open` - нажатие кнопки открытия корзины.
 `basket:checkout` - нажатие кнопки оформления заказа.
@@ -399,11 +397,9 @@ Presenter - презентер содержит основную логику п
 `catalog:change` - изменение каталога товаров.
 `preview:change` - изменение выбранного для просмотра товара.
 `basket:change` - изменение содержимого корзины.
-`order:validation` - изменение данных покупателя.
+`formErrors:change` - изменение данных покупателя.
 
 ### Презентер
 В приложении не выделен отдельный класс Презентера. Согласно архитектуре MVP, слой управления (Презентер) реализован в основном скрипте приложения `main.ts`. 
 
 Код выполняет инициализацию всех необходимых экземпляров классов (Моделей, Представлений и API), использует глобальный брокер событий `EventEmitter` для их связывания и управляет бизнес-логикой путем установки слушателей.
-
-Презентер не генерирует события (не использует метод `emit`), а только реагирует на действия пользователя и изменения в Моделях данных.

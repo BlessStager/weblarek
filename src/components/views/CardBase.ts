@@ -2,22 +2,28 @@ import { Component } from '../base/Component';
 import { IEvents } from '../base/Events';
 import { ensureElement } from '../../utils/utils';
 
+export interface ICardActions {
+    onClick: (event: MouseEvent) => void;
+}
+
 export interface ICardData {
     title: string;
     price: number | null;
-    id: string;
 }
 
 export class CardBase<T> extends Component<T> {
     protected titleElement: HTMLElement;
     protected priceElement: HTMLElement;
-    protected productId: string = '';
 
-    constructor(container: HTMLElement, protected events: IEvents) {
+    constructor(container: HTMLElement, actions?: ICardActions) {
         super(container);
         
         this.titleElement = ensureElement<HTMLElement>('.card__title', this.container);
         this.priceElement = ensureElement<HTMLElement>('.card__price', this.container);
+
+        if (actions?.onClick) {
+            this.container.addEventListener('click', actions.onClick);
+        }
     }
 
     set title(value: string) {
@@ -30,9 +36,5 @@ export class CardBase<T> extends Component<T> {
         } else {
             this.priceElement.textContent = String(value) + ' синапсов';
         }
-    }
-
-    set id(value: string) {
-        this.productId = value;
     }
 }

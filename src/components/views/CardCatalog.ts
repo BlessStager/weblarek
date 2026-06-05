@@ -1,5 +1,4 @@
-import { CardBase, ICardData } from './CardBase';
-import { IEvents } from '../base/Events';
+import { CardBase, ICardData, ICardActions  } from './CardBase';
 import { ensureElement } from '../../utils/utils';
 import { categoryMap } from '../../utils/constants';
 
@@ -13,15 +12,11 @@ export class CardCatalog extends CardBase<ICardCatalogData> {
     protected categoryElement: HTMLElement;
     protected imageElement: HTMLImageElement;
 
-    constructor(container: HTMLElement, events: IEvents) {
-        super(container, events);
+    constructor(container: HTMLElement, actions?: ICardActions) {
+        super(container, actions);
         
         this.categoryElement = ensureElement<HTMLElement>('.card__category', this.container);
         this.imageElement = ensureElement<HTMLImageElement>('.card__image', this.container);
-
-        this.container.addEventListener('click', () => {
-            this.events.emit('card:select', { id: this.productId });
-        });
     }
 
     set category(value: string) {
