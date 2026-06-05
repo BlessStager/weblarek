@@ -1,4 +1,5 @@
 import { IBuyer, TPayment, BuyerErrors  } from '../../types';
+import { IEvents } from '../base/Events';
 
 export class BuyerModel {
     protected payment: TPayment | null = null;
@@ -6,7 +7,7 @@ export class BuyerModel {
     protected phone: string = '';
     protected address: string = '';
 
-    constructor() {
+    constructor(protected events: IEvents) {
         
     }
 
@@ -53,6 +54,8 @@ export class BuyerModel {
         if (!this.phone) {
             errors.phone = 'Необходимо указать телефон';
         }
+
+        this.events.emit('order:validation', errors);
 
         return errors;
     }
