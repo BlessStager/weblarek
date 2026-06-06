@@ -1,5 +1,4 @@
 import { Component } from '../base/Component';
-import { IEvents } from '../base/Events';
 import { ensureElement } from '../../utils/utils';
 
 export interface ICardActions {
@@ -15,15 +14,11 @@ export class CardBase<T> extends Component<T> {
     protected titleElement: HTMLElement;
     protected priceElement: HTMLElement;
 
-    constructor(container: HTMLElement, actions?: ICardActions) {
+    constructor(container: HTMLElement) {
         super(container);
         
         this.titleElement = ensureElement<HTMLElement>('.card__title', this.container);
         this.priceElement = ensureElement<HTMLElement>('.card__price', this.container);
-
-        if (actions?.onClick) {
-            this.container.addEventListener('click', actions.onClick);
-        }
     }
 
     set title(value: string) {

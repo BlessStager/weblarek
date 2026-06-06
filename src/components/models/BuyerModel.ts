@@ -18,7 +18,7 @@ export class BuyerModel {
             this[field] = value;
         }
         
-        this.events.emit('formErrors:change', this.validate());
+        this.events.emit('buyer:change');
     }
 
     getData(): IBuyer {
@@ -35,7 +35,7 @@ export class BuyerModel {
         this.email = '';
         this.phone = '';
         this.address = '';
-        this.events.emit('formErrors:change', this.validate()); 
+        this.events.emit('buyer:change'); 
     }
 
     validate(): BuyerErrors {
@@ -46,6 +46,12 @@ export class BuyerModel {
         }
         if (!this.address) {
             errors.address = 'Необходимо указать адрес доставки';
+        }
+        if (!this.email) {
+            errors.email = 'Необходимо указать email';
+        }
+        if (!this.phone) {
+            errors.phone = 'Необходимо указать телефон';
         }
 
         return errors;

@@ -162,7 +162,8 @@ events.on('forms:change', (data: { field: keyof IBuyer; value: string }) => {
     buyer.setField(data.field, data.value);
 });
 
-events.on('formErrors:change', (errors: BuyerErrors) => {
+events.on('buyer:change', () => {
+    const errors = buyer.validate();
     const { payment, address, email, phone } = errors;
     
     const isOrderValid = !payment && !address;
