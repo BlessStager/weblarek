@@ -1,5 +1,5 @@
 import './scss/styles.scss';
-import { IBuyer, BuyerErrors } from './types';
+import { IBuyer } from './types';
 import { CatalogModel } from './components/models/CatalogModel';
 import { CartModel } from './components/models/CartModel';
 import { BuyerModel } from './components/models/BuyerModel';
